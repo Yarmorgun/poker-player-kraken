@@ -1,11 +1,11 @@
 import sys
 g_numpy_ok = False
-try:
-    import numpy as np
-    g_numpy_ok = True
-except ImportError:
-    sys.stdout.write('numpy not exist')
-
+# try:
+#     import numpy as np
+#     g_numpy_ok = True
+# except ImportError:
+#     sys.stdout.write('numpy not exist')
+import numpy as np
 import random
 # ranks idx
 Two     =   0
@@ -41,8 +41,8 @@ Three_of_a_Kind = 3
 Two_pair        = 2
 One_pair        = 1
 
-card_test  = np.array[int(0)*52]
-card_test.shape(4,13)
+# card_test  = np.array[int(0)*52]
+# card_test.shape(4,13)
 class Combinator:
 
     def __init__(self, card_deck):
@@ -196,74 +196,68 @@ class CardWorker:
 
 # get probability
 def getProbability(countOfPlayers, distrib, myPair, existOnTable):
-    if g_numpy_ok:
-        cw_obj = CardWorker()
-        comb_obj = Combinator(cw_obj.Card_deck)
+    # if g_numpy_ok:
+    cw_obj = CardWorker()
+    comb_obj = Combinator(cw_obj.Card_deck)
 
-        remaining_number    = 5 - len(existOnTable)
-        countOurWins  = 0
-        genCardCount        = remaining_number
+    remaining_number    = 5 - len(existOnTable)
+    countOurWins  = 0
+    genCardCount        = remaining_number
 
-        for test_i in range(0, distrib+1):
+    for test_i in range(0, distrib+1):
 
-            for card in existOnTable:
-                cw_obj.putCard_to_mamemory(card)  # put in array
-                cw_obj.setCard(card)
-            for card in myPair:
+        for card in existOnTable:
+            cw_obj.putCard_to_mamemory(card)  # put in array
+            cw_obj.setCard(card)
+        for card in myPair:
+            cw_obj.putCard_to_mamemory(card)
+            cw_obj.un_setCard(card)
+
+        BestRaundScore = [0, 0]
+        BestRaundScore[0] = 0
+        BestRaundScore[1] = 0
+
+        playerCardList = []  # cards on hand for other players
+        for player_i in range(0,countOfPlayers):
+            player_i_cards =  cw_obj.genCards(2)
+            playerCardList.append(player_i_cards)
+            for card in player_i_cards:
                 cw_obj.putCard_to_mamemory(card)
+
+        onTableCards = cw_obj.genCards(genCardCount)
+        for card in onTableCards:
+            cw_obj.putCard_to_mamemory(card)#
+            cw_obj.setCard(card)
+
+        # get combinations for players
+        for player_i in range(0,countOfPlayers):
+
+            for card in playerCardList[player_i]:
+                cw_obj.setCard(card)
+
+            res = comb_obj.getCombination()
+            if(BestRaundScore[0] < res[0]):
+                BestRaundScore = res
+            elif(BestRaundScore[0] == res[0]):
+                if BestRaundScore[1] < res[1]:
+                    BestRaundScore[1] = res[1]
+
+            for card in playerCardList[player_i]:
                 cw_obj.un_setCard(card)
 
-            BestRaundScore = [0, 0]
-            BestRaundScore[0] = 0
-            BestRaundScore[1] = 0
+        # get combination for myself
+        for card in myPair:
+            cw_obj.setCard(card)
+        res = comb_obj.getCombination()
+        if BestRaundScore[0] < res[0]:
+            countOurWins = countOurWins + 1
 
-            playerCardList = []  # cards on hand for other players
-            for player_i in range(0,countOfPlayers):
-                player_i_cards =  cw_obj.genCards(2)
-                playerCardList.append(player_i_cards)
-                for card in player_i_cards:
-                    cw_obj.putCard_to_mamemory(card)
-
-            onTableCards = cw_obj.genCards(genCardCount)
-            for card in onTableCards:
-                cw_obj.putCard_to_mamemory(card)#
-                cw_obj.setCard(card)
-
-            # get combinations for players
-            for player_i in range(0,countOfPlayers):
-
-                for card in playerCardList[player_i]:
-                    cw_obj.setCard(card)
-
-                res = comb_obj.getCombination()
-                if(BestRaundScore[0] < res[0]):
-                    BestRaundScore = res
-                elif(BestRaundScore[0] == res[0]):
-                    if BestRaundScore[1] < res[1]:
-                        BestRaundScore[1] = res[1]
-
-                for card in playerCardList[player_i]:
-                    cw_obj.un_setCard(card)
-
-            # get combination for myself
-            for card in myPair:
-                cw_obj.setCard(card)
-            res = comb_obj.getCombination()
-            if BestRaundScore[0] < res[0]:
+        elif BestRaundScore[0] == res[0]:
+            if BestRaundScore[1] < res[1]:
                 countOurWins = countOurWins + 1
 
-            elif BestRaundScore[0] == res[0]:
-                if BestRaundScore[1] < res[1]:
-                    countOurWins = countOurWins + 1
-
-            cw_obj.clearCard_deck()
-            cw_obj.clearMemory()
-        return (float(countOurWins) / distrib)
-    else:
-        return 1
-
-<<<<<<< HEAD
-    
-=======
-  
->>>>>>> refs/remotes/origin/master
+        cw_obj.clearCard_deck()
+        cw_obj.clearMemory()
+    return (float(countOurWins) / distrib) * 100
+    # else:
+    #     return 1
