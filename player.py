@@ -50,10 +50,13 @@ class Player:
         try:
             preflop_probability = preflop_probability_table[hand_converted][players_count-1]
         except:
-            hand_converted[0], hand_converted[1] = hand_converted[1], hand_converted[0]
-            print "HAND_CONVERTED_2:", hand_converted
+            print "START_CONVERTING"
+            hand_converted_2 = hand_converted[1] + hand_converted[0]
+            if len(hand_converted) == 3:
+                hand_converted_2 += hand_converted[2]
+            print "HAND_CONVERTED_2:", hand_converted_2
             try:
-                preflop_probability = preflop_probability_table[hand_converted][players_count-1]
+                preflop_probability = preflop_probability_table[hand_converted_2][players_count-1]
             except:
                 preflop_probability = 100
 
