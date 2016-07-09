@@ -90,11 +90,14 @@ class Player:
             hand = self.our_player["hole_cards"]
             #preflop_probability = self.get_preflop_probability(hand, self.active_players)
             preflop_probability = 0.0
-            preflop_probability = pa.getProbability(self.active_players, 1000, converters.server_to_propobility_gen(hand),
+            preflop_probability = pa.getProbability(self.active_players, 500, converters.server_to_propobility_gen(hand),
                                                     converters.server_to_propobility_gen(game_state["community_cards"]))
             print >> sys.stderr, "HAND:", hand, "TABLE:", game_state["community_cards"], "preflop probability: " + str(preflop_probability)
             if preflop_probability < 16.0:
-                self.foldBet()
+                if self.game_state['current_buy_in'] < 25 and self.game_state['round'] < 10:
+                    self.callBet()
+                else:
+                    self.foldBet()
             elif preflop_probability >= 16.0 and preflop_probability < 26:
                 self.checkBet()
             elif preflop_probability >= 26 and preflop_probability < 38:
@@ -112,7 +115,8 @@ class Player:
             return self.bet
 
     def showdown(self, game_state):
-        print game_state
+        # print game_state
+        pass
 
 # EXAMPLE TEST bet
 # pl = Player()
