@@ -90,6 +90,7 @@ class Player:
 
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand)
+            print >> sys.stderr, "preflop probability: " + str(preflop_probability)
             if preflop_probability < 5.0:
                 return self.foldBet()
             elif preflop_probability >= 5.0 and preflop_probability < 10.0:
