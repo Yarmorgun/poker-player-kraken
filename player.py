@@ -94,10 +94,7 @@ class Player:
                                                     converters.server_to_propobility_gen(game_state["community_cards"]))
             print >> sys.stderr, "TOR_ID:", game_state["tournament_id"], "GAME_ID:", game_state["game_id"], "HAND:", hand, "TABLE:", game_state["community_cards"], "preflop probability: " + str(preflop_probability)
             if preflop_probability < 16.0:
-                if self.game_state['current_buy_in'] < 25 and self.game_state['round'] < 10:
-                    self.callBet()
-                else:
-                    self.foldBet()
+                self.foldBet()
             elif preflop_probability >= 16.0 and preflop_probability < 26:
                 self.checkBet()
             elif preflop_probability >= 26 and preflop_probability < 38:
