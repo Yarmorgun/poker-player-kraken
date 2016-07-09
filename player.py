@@ -58,7 +58,7 @@ class Player:
         return preflop_probability
 
     def checkBet(self):
-        print >> sys.stderr, "checkBet"
+        print >> sys.stderr, "CHECK_BET"
         current_buy_in = self.game_state["current_buy_in"]
         if current_buy_in == self.our_player["bet"]:
             self.bet = 0
@@ -66,20 +66,19 @@ class Player:
             self.bet = self.our_player["bet"]
 
     def foldBet(self):
-        print >> sys.stderr, "foldBet"
+        print >> sys.stderr, "FOLD_BET"
         self.bet = 0
 
     def callBet(self):
-        print >> sys.stderr, "callBet"
+        print >> sys.stderr, "CALL_BET"
         self.bet = self.game_state['current_buy_in'] - self.our_player['bet']
-        print "BET_CALL:", self.bet
 
     def raiseBet(self):
-        print >> sys.stderr, "raiseBet"
+        print >> sys.stderr, "RAISE_BET"
         self.bet = self.game_state['current_buy_in'] - self.our_player['bet'] + self.game_state['minimum_raise']
 
     def all_in(self):
-        print >> sys.stderr, "allIn"
+        print >> sys.stderr, "ALL_IN"
         if self.our_player:
             our_stack = self.our_player["stack"]
             self.bet = our_stack
@@ -99,9 +98,10 @@ class Player:
                     self.our_player = player
                     break
 
+            print "ACTIVE PLAYERS: ", self.active_players
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand, self.active_players)
-            print >> sys.stderr, "HAND:", hand, "preflop probability: " + str(preflop_probability)
+            print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
             if preflop_probability < 5.0:
                 self.foldBet()
             elif preflop_probability >= 5.0 and preflop_probability < 10.0:
@@ -116,7 +116,7 @@ class Player:
             print >> sys.stderr, "MAIN EXCEPTION: ", e.message
             self.all_in()
         finally:
-            print self.bet
+            print "FINAL_BET:", self.bet
             return self.bet
 
     def showdown(self, game_state):
