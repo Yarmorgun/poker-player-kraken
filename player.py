@@ -42,15 +42,15 @@ class Player:
         self.our_player = None
 
 
-    def get_preflop_probability(self, hand):
+    def get_preflop_probability(self, hand, players_count):
         preflop_probability_table = parser.Parser().parse_preflop("preflop.txt")
         hand_converted = converters.server_to_table(hand)
         try:
-            preflop_probability = preflop_probability_table[hand_converted]
+            preflop_probability = preflop_probability_table[hand_converted][players_count-1]
         except KeyError:
             hand_converted[0], hand_converted[1] = hand_converted[1], hand_converted[0]
             try:
-                preflop_probability = preflop_probability_table[hand_converted]
+                preflop_probability = preflop_probability_table[hand_converted][players_count-1]
             except:
                 preflop_probability = 100
 
@@ -78,11 +78,17 @@ class Player:
         player_index = self.game_state['in_action']
         return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
 
+    def all_in(self):
+        if self.our_player:
+            our_stack = self.our_player["stack"]
+            self.bet = our_stack
+            return self.bet
 
     def betRequest(self, game_state):
         self.game_state = game_state
         try:
             players_list = game_state["players"]
+            players_count = len(players_list)
 
             for player in players_list:
                 if player["name"] == Player.NAME:
@@ -90,7 +96,7 @@ class Player:
                     break
 
             hand = self.our_player["hole_cards"]
-            preflop_probability = self.get_preflop_probability(hand)
+            preflop_probability = self.get_preflop_probability(hand, players_count)
             print >> sys.stderr, "preflop probability: " + str(preflop_probability)
             if preflop_probability < 5.0:
                 return self.foldBet()
@@ -100,11 +106,11 @@ class Player:
                 return self.callBet()
             elif preflop_probability > 15.0:
                 return self.raiseBet()
+            elif preflop_probability == 100:
+                return self.all_in()
         except:
             print >> sys.stderr, "Main exception"
-            if self.our_player:
-                our_stack = self.our_player["stack"]
-                self.bet = our_stack
+            self.all_in()
         finally:
             return self.bet
 
