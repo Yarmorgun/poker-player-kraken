@@ -94,11 +94,11 @@ class Player:
             print >> sys.stderr, "HAND:", hand, "TABLE:", game_state["community_cards"], "preflop probability: " + str(preflop_probability)
             if preflop_probability < 16.0:
                 self.foldBet()
-            elif preflop_probability >= 16.0 and preflop_probability < 36:
+            elif preflop_probability >= 16.0 and preflop_probability < 26:
                 self.checkBet()
-            elif preflop_probability >= 36 and preflop_probability < 50:
+            elif preflop_probability >= 26 and preflop_probability < 38:
                 self.callBet()
-            elif preflop_probability > 50.0:
+            elif preflop_probability >= 38.0:
                 self.raiseBet()
             elif preflop_probability >= 80:
                 self.all_in()
