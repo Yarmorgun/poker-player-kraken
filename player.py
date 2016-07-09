@@ -62,6 +62,7 @@ class Player:
     def raiseBet(self):
         print >> sys.stderr, "RAISE_BET"
         self.bet = self.game_state['current_buy_in'] - self.our_player['bet'] + self.game_state['minimum_raise']
+        self.bet = 3*self.bet
 
     def all_in(self):
         print >> sys.stderr, "ALL_IN"
@@ -111,7 +112,7 @@ class Player:
             return self.bet
 
     def showdown(self, game_state):
-        pass
+        print game_state
 
 # EXAMPLE TEST bet
 # pl = Player()
