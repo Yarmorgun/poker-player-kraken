@@ -122,9 +122,9 @@ class Player:
                 self.foldBet()
             elif preflop_probability >= 5.0 and preflop_probability < 10.0:
                 self.checkBet()
-            elif preflop_probability >= 10.0 and preflop_probability < 15.0:
+            elif preflop_probability >= 10.0 and preflop_probability < 35.0:
                 self.callBet()
-            elif preflop_probability > 15.0:
+            elif preflop_probability > 35.0:
                 maxUsersStack = self.maxStack()
                 if maxUsersStack != 0 and maxUsersStack < self.our_player["stack"]:
                     self.all_in()
