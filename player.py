@@ -1,6 +1,8 @@
 import converters
 import parser
 import sys
+import probability_analysis as pa
+import game_state_parser as gsp
 
 
 # // test bot logic
@@ -32,7 +34,7 @@ def bot_logic(game_state):
 
 class Player:
 
-    VERSION = "1.4"
+    VERSION = "1.2"
     NAME = "Kraken"
 
     def __init__(self):
@@ -58,28 +60,27 @@ class Player:
 
     def checkBet(self):
         print >> sys.stderr, "checkBet"
-        current_buy_in = self.game_state["current_buy_in"]
-        if current_buy_in == self.our_player["bet"]:
-            self.bet = 0
+        our_buy_in = self.our_player["current_buy_in"]
+        if our_buy_in == self.our_player["bet"]:
+            return 0
         else:
-            self.bet = self.our_player["bet"]
+            return self.our_player["bet"]
 
     def foldBet(self):
         print >> sys.stderr, "foldBet"
-        self.bet = 0
+        return 0
 
     def callBet(self):
         print >> sys.stderr, "callBet"
         player_index = self.game_state['in_action']
-        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
+        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
 
     def raiseBet(self):
         print >> sys.stderr, "raiseBet"
         player_index = self.game_state['in_action']
-        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
+        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
 
     def all_in(self):
-        print >> sys.stderr, "allIn"
         if self.our_player:
             our_stack = self.our_player["stack"]
             self.bet = our_stack
@@ -97,25 +98,29 @@ class Player:
                     break
 
             hand = self.our_player["hole_cards"]
-            preflop_probability = self.get_preflop_probability(hand, players_count)
-            print >> sys.stderr, "HAND:", hand, "preflop probability: " + str(preflop_probability)
-            if preflop_probability < 5.0:
-                self.foldBet()
-            elif preflop_probability >= 5.0 and preflop_probability < 10.0:
-                self.checkBet()
-            elif preflop_probability >= 10.0 and preflop_probability < 15.0:
-                self.callBet()
-            elif preflop_probability > 15.0:
-                self.raiseBet()
-            elif preflop_probability == 100:
-                self.all_in()
-        except Exception as e:
-            print >> sys.stderr, "MAIN EXCEPTION: ", e.message
+            # preflop_probability = self.get_preflop_probability(hand, players_count)
+            print >> sys.stderr, "before getProbability"
+            preflop_probability = pa.getProbability(gsp.get_active_players(), 1000, hand, self.game_state["community_cards"])
+            print >> sys.stderr, "preflop probability: " + str(preflop_probability)
+            preflop_probability = preflop_probability*100
+            if preflop_probability < 30.0:
+                return self.foldBet()
+            elif preflop_probability >= 30.0 and preflop_probability < 40.0:
+                return self.checkBet()
+            elif preflop_probability >= 40.0 and preflop_probability < 80.0:
+                return self.callBet()
+            elif preflop_probability > 80.0:
+                return self.raiseBet()
+            elif preflop_probability >= 90:
+                return self.all_in()
+        except:
+            print >> sys.stderr, "Main exception"
             self.all_in()
         finally:
-            print self.bet
             return self.bet
 
     def showdown(self, game_state):
         pass
+
+
 
