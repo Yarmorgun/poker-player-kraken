@@ -32,7 +32,7 @@ def bot_logic(game_state):
 
 class Player:
 
-    VERSION = "1.2"
+    VERSION = "1.3"
     NAME = "Kraken"
 
     def __init__(self):
@@ -58,25 +58,25 @@ class Player:
 
     def checkBet(self):
         print >> sys.stderr, "checkBet"
-        our_buy_in = self.our_player["current_buy_in"]
-        if our_buy_in == self.our_player["bet"]:
-            return 0
+        current_buy_in = self.game_state["current_buy_in"]
+        if current_buy_in == self.our_player["bet"]:
+            self.bet = 0
         else:
-            return self.our_player["bet"]
+            self.bet = self.our_player["bet"]
 
     def foldBet(self):
         print >> sys.stderr, "foldBet"
-        return 0
+        self.bet = 0
 
     def callBet(self):
         print >> sys.stderr, "callBet"
         player_index = self.game_state['in_action']
-        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
+        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
 
     def raiseBet(self):
         print >> sys.stderr, "raiseBet"
         player_index = self.game_state['in_action']
-        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
+        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
 
     def all_in(self):
         if self.our_player:
@@ -97,17 +97,17 @@ class Player:
 
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand, players_count)
-            print >> sys.stderr, "preflop probability: " + str(preflop_probability)
+            print >> sys.stderr, "HAND:", hand, "preflop probability: " + str(preflop_probability)
             if preflop_probability < 5.0:
-                return self.foldBet()
+                self.foldBet()
             elif preflop_probability >= 5.0 and preflop_probability < 10.0:
-                return self.checkBet()
+                self.checkBet()
             elif preflop_probability >= 10.0 and preflop_probability < 15.0:
-                return self.callBet()
+                self.callBet()
             elif preflop_probability > 15.0:
-                return self.raiseBet()
+                self.raiseBet()
             elif preflop_probability == 100:
-                return self.all_in()
+                self.all_in()
         except:
             print >> sys.stderr, "Main exception"
             self.all_in()
