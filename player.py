@@ -121,12 +121,16 @@ class Player:
             print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
             if preflop_probability < 15.0:
                 self.foldBet()
-            elif preflop_probability >= 15.0 and preflop_probability < 25.0:
+            elif preflop_probability >= 15.0 and preflop_probability < 20.0:
                 self.checkBet()
-            elif preflop_probability >= 25.0 and preflop_probability < 35.0:
+            elif preflop_probability >= 20.0 and preflop_probability < 40.0:
                 self.callBet()
-            elif preflop_probability > 35.0:
-                self.raiseBet()
+            elif preflop_probability > 40.0:
+                maxUsersStack = self.maxStack()
+                if maxUsersStack != 0 and maxUsersStack < self.our_player["stack"]:
+                    self.all_in()
+                else:
+                    self.raiseBet()
             elif preflop_probability == 100:
                 self.all_in()
         except Exception as e:
