@@ -32,7 +32,7 @@ def bot_logic(game_state):
 
 class Player:
 
-    VERSION = "1.3"
+    VERSION = "1.4"
     NAME = "Kraken"
 
     def __init__(self):
@@ -79,6 +79,7 @@ class Player:
         self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
 
     def all_in(self):
+        print >> sys.stderr, "allIn"
         if self.our_player:
             our_stack = self.our_player["stack"]
             self.bet = our_stack
@@ -108,10 +109,11 @@ class Player:
                 self.raiseBet()
             elif preflop_probability == 100:
                 self.all_in()
-        except:
-            print >> sys.stderr, "Main exception"
+        except Exception as e:
+            print >> sys.stderr, "MAIN EXCEPTION: ", e.message
             self.all_in()
         finally:
+            print self.bet
             return self.bet
 
     def showdown(self, game_state):
