@@ -139,3 +139,50 @@ class Combinator:
             return [One_pair,One_pair_idx]
 
         return [0,Kicker]
+
+
+class CardWorker:
+    def __init__(self):
+        #base array for cards
+        self.Card_deck = np.array([int(0)]*52)
+        self.Card_deck.shape = (4, 13)
+
+        #array for cards, needed for generate unique cards
+        self.Memory_deck = np.array([int(0)]*52)
+        self.Memory_deck.shape = (4, 13)
+
+    # mark that card is already used
+    def putCard_to_mamemory(self, a):
+        self.Memory_deck[a] = 1
+
+    # clear all card
+    def clearMemory(self):
+        self.Memory_deck.fill(0)
+
+    #clear all card in game
+    def clearCard_deck(self):
+        self.Card_deck.fill(0)
+
+    # set card in deck , in which will be checked combination
+    def setCard(self, a):
+        self.Card_deck[a] = 1
+
+    # take out from deck , in which will be checked combination
+    def un_setCard(self, a):
+        self.Card_deck[a] = 0
+
+    # generate random card
+    def genCards(self, count):
+        i = 0
+        cardList = []
+        while(i!=count):
+            rang = random.randint(Two,Ace)
+            suit = random.randint(heart,spade)
+            if(self.Memory_deck[suit][rang]!=0):
+                continue
+            i = i + 1
+            cardList.append((suit,rang))
+            self.Memory_deck[suit][rang] = 1
+        return cardList
+    
+    
