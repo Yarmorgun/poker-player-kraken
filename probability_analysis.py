@@ -34,6 +34,8 @@ Three_of_a_Kind = 3
 Two_pair        = 2
 One_pair        = 1
 
+card_test  = np.array[int(0)*52]
+card_test.shape(4,13)
 class Combinator:
 
     def __init__(self, card_deck):
@@ -138,6 +140,7 @@ class Combinator:
 
         return [0,Kicker]
 
+
 class CardWorker:
     def __init__(self):
         #base array for cards
@@ -181,6 +184,8 @@ class CardWorker:
             cardList.append((suit,rang))
             self.Memory_deck[suit][rang] = 1
         return cardList
+
+
 
 # get probability
 def getProbability(countOfPlayers, distrib, myPair, existOnTable):
@@ -250,4 +255,3 @@ def getProbability(countOfPlayers, distrib, myPair, existOnTable):
     return (float(countOurWins) / distrib)
 
     
-print getProbability(5,700,[(heart,Two),(club,Two)],[])
