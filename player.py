@@ -5,13 +5,13 @@ import parser
 
 # // test bot logic
 def bot_logic(game_state):
-
+    return 0
 	# // todo: need parsing game_state: is_someone_allin(), is_someone_rise(), get_active_players(), get_all_money_in_game()
 	# // todo: get_probabillity()
 	# // todo:
-	fold = 0
-	someone_allin = True # is_someone_allin()
-	noone_rise = False # is_someone_rise()
+	#fold = 0
+	#someone_allin = True # is_someone_allin()
+	#noone_rise = False # is_someone_rise()
 	# active_player_count = # get_active_players()
 	# our_probabillity_to_win = get_probabillity()
 	# current_pot = get_all_money_in_game()
@@ -86,6 +86,14 @@ class Player:
 
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand)
+            if preflop_probability < 5.0:
+                return self.foldBet()
+            elif preflop_probability > 5.0:
+                return self.checkBet()
+            elif preflop_probability > 10.0:
+                return self.callBet()
+            elif preflop_probability > 15.0:
+                return self.raiseBet()
         except:
             if self.our_player:
                 our_stack = self.our_player["stack"]
