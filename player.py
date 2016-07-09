@@ -71,15 +71,12 @@ class Player:
 
     def callBet(self):
         print >> sys.stderr, "callBet"
-        player_index = self.game_state['in_action']
-        print "player_index: ", player_index
-        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
+        self.bet = self.game_state['current_buy_in'] - self.our_player['bet']
         print "BET_CALL:", self.bet
 
     def raiseBet(self):
         print >> sys.stderr, "raiseBet"
-        player_index = self.game_state['in_action']
-        self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
+        self.bet = self.game_state['current_buy_in'] - self.our_player['bet'] + self.game_state['minimum_raise']
 
     def all_in(self):
         print >> sys.stderr, "allIn"
