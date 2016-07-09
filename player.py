@@ -46,13 +46,11 @@ class Player:
     def get_preflop_probability(self, hand, players_count):
         preflop_probability_table = parser.Parser().parse_preflop("preflop.txt")
         hand_converted = converters.server_to_table(hand)
-        print
-        "HAND_CONVERTED:", hand_converted
+        print "HAND_CONVERTED:", hand_converted
         try:
             preflop_probability = preflop_probability_table[hand_converted][players_count - 1]
         except:
-            print
-            "START_CONVERTING"
+            print "START_CONVERTING"
             hand_converted_2 = hand_converted[1] + hand_converted[0]
             if len(hand_converted) == 3:
                 hand_converted_2 += hand_converted[2]
@@ -63,8 +61,7 @@ class Player:
             except:
                 preflop_probability = 100
 
-        print
-        "PREFLOP_PROB_EXIT"
+        print "PREFLOP_PROB_EXIT"
         return preflop_probability
 
     def checkBet(self):
@@ -118,8 +115,7 @@ class Player:
                     self.our_player = player
                     break
 
-            print
-            "ACTIVE PLAYERS: ", self.active_players
+            print "ACTIVE PLAYERS: ", self.active_players
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand, self.active_players)
             print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
@@ -141,8 +137,7 @@ class Player:
             print >> sys.stderr, "MAIN EXCEPTION: ", e.message
             self.all_in()
         finally:
-            print
-            "FINAL_BET:", self.bet
+            print "FINAL_BET:", self.bet
             return self.bet
 
     def showdown(self, game_state):
