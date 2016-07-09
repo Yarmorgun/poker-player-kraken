@@ -1,6 +1,6 @@
 import converters
 import parser
-
+import sys
 
 
 # // test bot logic
@@ -57,6 +57,7 @@ class Player:
         return preflop_probability
 
     def checkBet(self):
+        print >> sys.stderr, "checkBet"
         our_buy_in = self.our_player["current_buy_in"]
         if our_buy_in == self.our_player["bet"]:
             return 0
@@ -64,13 +65,16 @@ class Player:
             return self.our_player["bet"]
 
     def foldBet(self):
+        print >> sys.stderr, "foldBet"
         return 0
 
     def callBet(self):
+        print >> sys.stderr, "callBet"
         player_index = self.game_state['in_action']
         return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
 
     def raiseBet(self):
+        print >> sys.stderr, "raiseBet"
         player_index = self.game_state['in_action']
         return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
 
@@ -95,6 +99,7 @@ class Player:
             elif preflop_probability > 15.0:
                 return self.raiseBet()
         except:
+            print >> sys.stderr, "Main exception"
             if self.our_player:
                 our_stack = self.our_player["stack"]
                 self.bet = our_stack
