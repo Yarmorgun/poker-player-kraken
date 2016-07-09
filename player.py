@@ -32,7 +32,7 @@ def bot_logic(game_state):
 
 class Player:
 
-    VERSION = "1.1"
+    VERSION = "1.2"
     NAME = "Kraken"
 
     def __init__(self):
@@ -88,9 +88,9 @@ class Player:
             preflop_probability = self.get_preflop_probability(hand)
             if preflop_probability < 5.0:
                 return self.foldBet()
-            elif preflop_probability > 5.0:
+            elif preflop_probability >= 5.0 and preflop_probability < 10.0:
                 return self.checkBet()
-            elif preflop_probability > 10.0:
+            elif preflop_probability >= 10.0 and preflop_probability < 15.0:
                 return self.callBet()
             elif preflop_probability > 15.0:
                 return self.raiseBet()
