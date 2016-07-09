@@ -76,6 +76,7 @@ class Player:
 
 
     def betRequest(self, game_state):
+        self.game_state = game_state
         try:
             players_list = game_state["players"]
 
