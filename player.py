@@ -92,7 +92,7 @@ class Player:
             if len(game_state["community_cards"]) == 0:
                 preflop_probability = self.get_preflop_probability(hand, self.active_players)
             else:
-                preflop_probability = pa.getProbability(self.active_players, 1000,
+                preflop_probability = pa.getProbability(self.active_players, 700,
                                                         converters.server_to_propobility_gen(hand),
                                                         converters.server_to_propobility_gen(
                                                             game_state["community_cards"]))
