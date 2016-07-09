@@ -49,7 +49,7 @@ class Player:
         print "HAND_CONVERTED:", hand_converted
         try:
             preflop_probability = preflop_probability_table[hand_converted][players_count-1]
-        except KeyError:
+        except:
             hand_converted[0], hand_converted[1] = hand_converted[1], hand_converted[0]
             print "HAND_CONVERTED_2:", hand_converted
             try:
