@@ -141,6 +141,4 @@ class Player:
             return self.bet
 
     def showdown(self, game_state):
-
-
-pass
+        pass
