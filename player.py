@@ -38,6 +38,24 @@ class Player:
         self.accuracy = 1000
         self.our_player = None
 
+    def checkBet(self):
+        our_buy_in = self.our_player["current_buy_in"]
+        if our_buy_in == self.our_player["bet"]:
+            return 0
+        else:
+            return self.our_player["bet"]
+
+    def foldBet(self):
+        return 0
+
+    def callBet(self):
+        player_index = self.game_state['in_action']
+        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
+
+    def raiseBet(self):
+        player_index = self.game_state['in_action']
+        return self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet'] + self.game_state['minimum_raise']
+
     def betRequest(self, game_state):
         players_list = game_state["players"]
 
