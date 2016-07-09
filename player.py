@@ -90,6 +90,16 @@ class Player:
             self.bet = our_stack
             return self.bet
 
+    def maxStack(self):
+        players_list = self.game_state["players"]
+        maxStack = 0
+        for pl in players_list:
+            if pl["status"] == "active" and pl["name"] != Player.NAME:
+                if pl["stack"] > maxStack:
+                    maxStack = pl["stack"]
+
+        return maxStack
+
     def betRequest(self, game_state):
         self.game_state = game_state
 
@@ -115,7 +125,11 @@ class Player:
             elif preflop_probability >= 10.0 and preflop_probability < 15.0:
                 self.callBet()
             elif preflop_probability > 15.0:
-                self.raiseBet()
+                maxUsersStack = self.maxStack()
+                if maxUsersStack != 0 and maxUsersStack < self.our_player["stack"]:
+                    self.all_in()
+                else:
+                    self.raiseBet()
             elif preflop_probability == 100:
                 self.all_in()
         except Exception as e:
