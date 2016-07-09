@@ -46,15 +46,18 @@ class Player:
     def get_preflop_probability(self, hand, players_count):
         preflop_probability_table = parser.Parser().parse_preflop("preflop.txt")
         hand_converted = converters.server_to_table(hand)
+        print "HAND_CONVERTED:", hand_converted
         try:
             preflop_probability = preflop_probability_table[hand_converted][players_count-1]
         except KeyError:
             hand_converted[0], hand_converted[1] = hand_converted[1], hand_converted[0]
+            print "HAND_CONVERTED_2:", hand_converted
             try:
                 preflop_probability = preflop_probability_table[hand_converted][players_count-1]
             except:
                 preflop_probability = 100
 
+        print "PREFLOP_PROB_EXIT"
         return preflop_probability
 
     def checkBet(self):
