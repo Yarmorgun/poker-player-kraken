@@ -1,10 +1,5 @@
 import numpy as np
-#suits idx
-heart             = 0
-diamond           = 1
-club              = 2
-spade             = 3
-
+import random
 # ranks idx
 Two     =   0
 Three   =   1
@@ -20,6 +15,14 @@ Queen   =   10
 King    =   11
 Ace     =   12
 
+#suits idx
+heart             = 0
+diamond           = 1
+club              = 2
+spade             = 3
+
+
+
 # combinations idx
 Royal_F         = 9
 Straight_F      = 8
@@ -31,7 +34,8 @@ Three_of_a_Kind = 3
 Two_pair        = 2
 One_pair        = 1
 
-
+card_test  = np.array[int(0)*52]
+card_test.shape(4,13)
 class Combinator:
 
     def __init__(self, card_deck):
@@ -77,15 +81,16 @@ class Combinator:
 
     # check for pair, two pairs, full house, Straight , Three_of_a_Kind
     def Else_Combination(self):
-        count_Straight          = 0
-        StraightIdx             = 0
-        is_Three_of_a_Kind      = False
-        Three_of_a_Kind_idx     = 0
-        is_One_pair             = False
+        Three_of_a_Kind      = False
+        _idx_Three_of_a_Kind    = 0
+        One_pair             = False
         One_pair_idx            = 0
         two_pair_idx            = 0
-        is_two_pair             = False
+        two_pair             = False
         Kicker                  = 0
+
+        _Straight_count          = 0
+        IdxStraight             = 0
         for idx in range(Two,Ace+1):
             count = 0
             for suitCardList in range(heart, spade+1):
@@ -97,39 +102,40 @@ class Combinator:
 
             if(count==4):
                 return [Four_of_K,idx]
+
             if(count==3):
-                is_Three_of_a_Kind = True
-                Three_of_a_Kind_idx = idx
+                Three_of_a_Kind = True
+                _idx_Three_of_a_Kind = idx
+                
             if(count==2):
-                if is_One_pair:
-                    is_two_pair  = True
+                if One_pair:
+                    two_pair  = True
                     two_pair_idx = idx
                     if idx < One_pair_idx:
                         two_pair_idx = One_pair_idx
-                is_One_pair = True
+                One_pair = True
                 One_pair_idx = idx
             if(count>0):
-                count_Straight = count_Straight + 1
+                _Straight_count = _Straight_count + 1
             elif count==0:
-                if count_Straight<5:
-                    count_Straight = 0
-                if    StraightIdx == 0:
-                    StraightIdx = idx-1
+                if _Straight_count<5:
+                    _Straight_count = 0
+                if    IdxStraight == 0:
+                    IdxStraight = idx-1
 
-        if(is_Three_of_a_Kind and is_One_pair):
-            return [Full_House, Three_of_a_Kind_idx]
+        if(Three_of_a_Kind and One_pair):
+            return [Full_House, _idx_Three_of_a_Kind]
 
-        if(count_Straight>=5):
-            return [Straight, StraightIdx]
+        if(_Straight_count>=5):
+            return [Straight, IdxStraight]
 
-        if(is_Three_of_a_Kind):
-            return [Three_of_a_Kind , Three_of_a_Kind_idx]
+        if(Three_of_a_Kind):
+            return [Three_of_a_Kind , _idx_Three_of_a_Kind]
 
-        if(is_two_pair):
+        if(two_pair):
             return [Two_pair,two_pair_idx]
 
-        if(is_One_pair):
+        if(One_pair):
             return [One_pair,One_pair_idx]
 
         return [0,Kicker]
-
