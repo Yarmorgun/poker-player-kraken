@@ -39,6 +39,7 @@ class Player:
         self.bet = 0
         self.risk = 1.
         self.accuracy = 1000
+        self.active_players = 0
         self.our_player = None
 
 
@@ -71,7 +72,9 @@ class Player:
     def callBet(self):
         print >> sys.stderr, "callBet"
         player_index = self.game_state['in_action']
+        print "player_index: ", player_index
         self.bet = self.game_state['current_buy_in'] - self.game_state['players'][player_index]['bet']
+        print "BET_CALL:", self.bet
 
     def raiseBet(self):
         print >> sys.stderr, "raiseBet"
@@ -87,9 +90,12 @@ class Player:
 
     def betRequest(self, game_state):
         self.game_state = game_state
+
         try:
             players_list = game_state["players"]
-            players_count = len(players_list)
+            for pl in players_list:
+                if pl["status"] == "active":
+                    self.active_players += 1
 
             for player in players_list:
                 if player["name"] == Player.NAME:
@@ -97,7 +103,7 @@ class Player:
                     break
 
             hand = self.our_player["hole_cards"]
-            preflop_probability = self.get_preflop_probability(hand, players_count)
+            preflop_probability = self.get_preflop_probability(hand, self.active_players)
             print >> sys.stderr, "HAND:", hand, "preflop probability: " + str(preflop_probability)
             if preflop_probability < 5.0:
                 self.foldBet()
