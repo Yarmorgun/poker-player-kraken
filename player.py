@@ -32,7 +32,7 @@ def bot_logic(game_state):
 
 class Player:
 
-    VERSION = "1.4"
+    VERSION = "1.5"
     NAME = "Kraken"
 
     def __init__(self):
@@ -118,13 +118,13 @@ class Player:
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand, self.active_players)
             print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
-            if preflop_probability < 5.0:
+            if preflop_probability < 15.0:
                 self.foldBet()
-            elif preflop_probability >= 5.0 and preflop_probability < 10.0:
+            elif preflop_probability >= 15.0 and preflop_probability < 20.0:
                 self.checkBet()
-            elif preflop_probability >= 10.0 and preflop_probability < 35.0:
+            elif preflop_probability >= 20.0 and preflop_probability < 40.0:
                 self.callBet()
-            elif preflop_probability > 35.0:
+            elif preflop_probability > 40.0:
                 maxUsersStack = self.maxStack()
                 if maxUsersStack != 0 and maxUsersStack < self.our_player["stack"]:
                     self.all_in()
