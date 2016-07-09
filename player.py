@@ -91,7 +91,7 @@ class Player:
             preflop_probability = 0.0
             preflop_probability = pa.getProbability(self.active_players, 1000, converters.server_to_propobility_gen(hand),
                                                     converters.server_to_propobility_gen(game_state["community_cards"]))
-            print >> sys.stderr, "HAND:", hand, "preflop probability: " + str(preflop_probability)
+            print >> sys.stderr, "HAND:", hand, "TABLE:", game_state["community_cards"], "preflop probability: " + str(preflop_probability)
             if preflop_probability < 16.0:
                 self.foldBet()
             elif preflop_probability >= 16.0 and preflop_probability < 36:
