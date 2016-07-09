@@ -138,10 +138,10 @@ class Player:
 
 
             print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
-            if preflop_probability < 15.0:
+            if preflop_probability < 35.0:
                 self.foldBet()
-            elif preflop_probability >= 15.0 and preflop_probability < 37.0:
-                self.checkBet()
+            # elif preflop_probability >= 35.0 and preflop_probability < 37.0:
+            #     self.checkBet()
             elif preflop_probability >= 37.0 and preflop_probability < 50.0:
                 self.callBet()
             elif preflop_probability > 50.0:
