@@ -1,6 +1,7 @@
 import converters
 import parser
 import sys
+import json
 
 
 # // test bot logic
@@ -118,6 +119,24 @@ class Player:
             print "ACTIVE PLAYERS: ", self.active_players
             hand = self.our_player["hole_cards"]
             preflop_probability = self.get_preflop_probability(hand, self.active_players)
+
+
+            tmphand = []
+            lastProb = 0
+            if len(game_state["community_cards"]) > 0:
+                for cardOne in hand:
+                    for cardTwo in game_state["community_cards"]:
+                        tmphand = [cardOne, cardTwo]
+                        preflop_probability = self.get_preflop_probability(tmphand, self.active_players)
+                        if (preflop_probability > lastProb):
+                            lastProb = preflop_probability
+                preflop_probability = lastProb
+            else:
+                preflop_probability = self.get_preflop_probability(hand, self.active_players)
+
+
+
+
             print >> sys.stderr, "HAND:", hand, "PROBABILITY: " + str(preflop_probability)
             if preflop_probability < 15.0:
                 self.foldBet()
@@ -142,3 +161,72 @@ class Player:
 
     def showdown(self, game_state):
         pass
+
+
+# pl = Player()
+# data = {
+#     "tournament_id":"550d1d68cd7bd10003000003",
+#     "game_id":"550da1cb2d909006e90004b1",
+#     "round":0,
+#     "bet_index":0,
+#     "small_blind": 10,
+#     "current_buy_in": 320,
+#     "pot": 400,
+#     "minimum_raise": 240,
+#     "dealer": 1,
+#     "orbits": 7,
+#     "in_action": 1,
+#     "players": [
+#         {
+#             "id": 0,
+#             "name": "bob",
+#             "status": "active",
+#             "version": "Default random player",
+#             "stack": 1010,
+#             "bet": 320
+#         },
+#         {
+#             "id": 1,
+#             "name": "Kraken",
+#             "status": "active",
+#             "version": "Default random player",
+#             "stack": 1590,
+#             "bet": 80,
+#             "hole_cards": [
+#                 {
+#                     "rank": "6",
+#                     "suit": "hearts"
+#                 },
+#                 {
+#                     "rank": "K",
+#                     "suit": "spades"
+#                 }
+#             ]
+#         },
+#         {
+#             "id": 2,
+#             "name": "Chuck",
+#             "status": "out",
+#             "version": "Default random player",
+#             "stack": 0,
+#             "bet": 0
+#         }
+#     ],
+#     "community_cards": [
+#         {
+#             "rank": "4",
+#             "suit": "spades"
+#         },
+#         {
+#             "rank": "A",
+#             "suit": "hearts"
+#         },
+#         {
+#             "rank": "6",
+#             "suit": "clubs"
+#         }
+#     ]
+# }
+# json_data = json.dumps(data)
+# json_msg = json.loads(json_data)
+# pl.betRequest(json_msg)
