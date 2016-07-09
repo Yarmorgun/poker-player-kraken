@@ -184,5 +184,74 @@ class CardWorker:
             cardList.append((suit,rang))
             self.Memory_deck[suit][rang] = 1
         return cardList
-    
+
+
+
+# get probability
+def getProbability(countOfPlayers, distrib, myPair, existOnTable):
+
+    cw_obj = CardWorker()
+    comb_obj = Combinator(cw_obj.Card_deck)
+
+    remaining_number    = 5 - len(existOnTable)
+    countOurWins  = 0
+    genCardCount        = remaining_number
+
+    for test_i in range(0, distrib+1):
+
+        for card in existOnTable:
+            cw_obj.putCard_to_mamemory(card)  # put in array
+            cw_obj.setCard(card)
+        for card in myPair:
+            cw_obj.putCard_to_mamemory(card)
+            cw_obj.un_setCard(card)
+
+        BestRaundScore = [0, 0]
+        BestRaundScore[0] = 0
+        BestRaundScore[1] = 0
+
+        playerCardList = []  # cards on hand for other players
+        for player_i in range(0,countOfPlayers):
+            player_i_cards =  cw_obj.genCards(2)
+            playerCardList.append(player_i_cards)
+            for card in player_i_cards:
+                cw_obj.putCard_to_mamemory(card)
+
+        onTableCards = cw_obj.genCards(genCardCount)
+        for card in onTableCards:
+            cw_obj.putCard_to_mamemory(card)#
+            cw_obj.setCard(card)
+
+        # get combinations for players
+        for player_i in range(0,countOfPlayers):
+
+            for card in playerCardList[player_i]:
+                cw_obj.setCard(card)
+
+            res = comb_obj.getCombination()
+            if(BestRaundScore[0] < res[0]):
+                BestRaundScore = res
+            elif(BestRaundScore[0] == res[0]):
+                if BestRaundScore[1] < res[1]:
+                    BestRaundScore[1] = res[1]
+
+            for card in playerCardList[player_i]:
+                cw_obj.un_setCard(card)
+
+        # get combination for myself
+        for card in myPair:
+            cw_obj.setCard(card)
+        res = comb_obj.getCombination()
+        if BestRaundScore[0] < res[0]:
+            countOurWins = countOurWins + 1
+
+        elif BestRaundScore[0] == res[0]:
+            if BestRaundScore[1] < res[1]:
+                countOurWins = countOurWins + 1
+
+        cw_obj.clearCard_deck()
+        cw_obj.clearMemory()
+
+    return (float(countOurWins) / distrib)
+
     
